@@ -6,10 +6,10 @@ pipeline {
 	}
 	
 	stages {
-		stage ("Build"){
+		stage ("Build") {
 			steps {
 				echo "-------- Build Started  ----------"
-				sh 'mvn clean deploy -Dmaven.test.skip = true'
+				sh 'mvn clean deploy -Dmaven.test.skip=true'
 				echo "-------- Build Completed  ----------"
 			}
 		}
@@ -20,15 +20,16 @@ pipeline {
 				echo "-------- Test Completed  ----------"
 			} 
 		}
-	}
-	stage("SonarQube Analsis"){
-		environment {
-			scannerHome = tool 'sq-scanner'
-		}
+
+		stage("SonarQube Analysis") {
+			environment {
+				scannerHome = tool 'sq-scanner'
+			}
 		
-		steps{
-			withSonarQubeEnv(sq-connection-jenkins){
-				sh "$(scannerHome)/bin/sonar-scanner"
+			steps{
+				withSonarQubeEnv('sq-connection-jenkins') {
+					sh "$(scannerHome)/bin/sonar-scanner"
+				}
 			}
 		}
 	}
