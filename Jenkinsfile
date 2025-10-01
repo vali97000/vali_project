@@ -28,7 +28,7 @@ pipeline {
 		
 			steps{
 				withSonarQubeEnv('sq-connection-jenkins') {
-					sh "$(scannerHome)/bin/sonar-scanner"
+					sh "${scannerHome}/bin/sonar-scanner"
 				}
 			}
 		}
