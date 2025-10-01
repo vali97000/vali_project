@@ -1,28 +1,35 @@
 pipeline {
-    agent any
-
-    environment {
-        PATH = "/opt/maven/bin:$PATH"
-    }
-
-    stages {
-        stage("build") {
-            steps {
-                sh 'mvn clean deploy'
-            }
-        }
-
-        stage('SonarQube analysis') {
-            environment {
-                scannerHome = tool 'sq-schanner'
-            }
-
-            steps {
-                withSonarQubeEnv('sq-connection-jenkins') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }
-            }
-        }
-    }
+	agent any
+	
+	environment {
+		PATH = "/opt/maven/bin:$PATH"
+	}
+	
+	stages {
+		stage ("Build"){
+			steps {
+				echo "-------- Build Started  ----------"
+				sh 'mvn clean deploy -Dmaven.test.skip = true'
+				echo "-------- Build Completed  ----------"
+			}
+		}
+		stage ("Test") {
+			steps {
+				echo "-------- Test Started  ----------"
+                                sh 'mvn surefire-report:report'
+                                echo "-------- Test Completed  ----------"
+			} 
+		}
+	}
+	stage("SonarQube Analsis"){
+		environment {
+			scannerHome = tool 'sq-scanner'
+		}
+		
+		steps{
+			withSonarQubeEnv(sq-connection-jenkins){
+				sh "$(scannerHome)/bin/sonar-scanner"
+			}
+		}
+	}
 }
-
