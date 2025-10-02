@@ -38,7 +38,7 @@ pipeline {
 					timeout(time: 1, unit: 'HOURS'){
 						def qg = waitForQualityGate()
 						if (qg.status != 'OK') {
-							echo "Warning: Quality Gate failed but continuing pipeline: $(qg.status)"
+							echo "Warning: Quality Gate failed but continuing pipeline: ${qg.status}"
 							// error "pipeline failed due to Quality Gate Failure: ${qg.status}"
 						}
 					}
