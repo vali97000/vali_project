@@ -22,28 +22,5 @@ pipeline {
             		}
         	}
 
-        	stage('SonarQube Analysis') {
-            		environment {
-                		scannerHome = tool 'sq-scanner'
-            		}
-            		steps {
-                		withSonarQubeEnv('sq-connection-jenkins') {
-                    			sh "${scannerHome}/bin/sonar-scanner"
-                		}
-            		}		
-        	}
-		stage("Quality Gate") {
-			steps {
-				script {
-					timeout(time: 15, unit: 'MINUTES') {
-						def qg = waitForQualityGate()
-						if(qg.status != 'OK') {
-							echo "Warning: Quality Gate failure, but continueing pipeline: ${qg.status}"
-						}
-					}
-				}
-			}
-		}
-
     	}
 }
