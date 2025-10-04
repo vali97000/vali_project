@@ -54,10 +54,10 @@ pipeline {
 			steps {
 				script {
 					echo "<=========JFrog Artifactory Started=============>"
-					def server = "Artifactory.newServer (url: "${registry}/artifactory", credentialId: "JFrog-Token")
+					def server = Artifactory.newServer(url: "${registry}/artifactory", credentialId: "JFrog-Token")
 					def properties = "buildid=${env.BUILD_ID},commitid=${GIT_COMMIT}"
-					def uploadSpec """{
-						files: [
+					def uploadSpec = """{
+						"files": [
 							{
 								"pattern": "jarstaging/(*)",
 								"target": "vali-libs-release-local/{1}",
