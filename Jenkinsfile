@@ -49,7 +49,7 @@ pipeline {
 			steps {
 				script {
 					echo '<============JAR Publish Started===============>'
-					def server = Artifactory.newServer url: "registry + '/artifactory'", credentialid: "JFrog-Token"
+					def server = Artifactory.newServer url: "${registry}/artifactory", credentialId: "JFrog-Token"
 					def properties = "buildid = ${env.BUILD_ID}, commitid= ${GIT_COMMIT}"
 					def uploadSpec = """{
 						"files": [
@@ -64,7 +64,7 @@ pipeline {
 						]
 					}"""
 					def buildinfo = server.upload(uploadSpec)
-					build.env.collect()
+					buildinfo.env.collect()
 					server.publishBuildInfo(buildinfo)
 					echo '<==========Jar Publish Ended=============>'
 				}
