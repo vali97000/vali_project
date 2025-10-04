@@ -1,3 +1,5 @@
+def registry = "https://trial2hancl.jfrog.io/"
+
 pipeline {
 	agent any
 
@@ -48,5 +50,29 @@ pipeline {
                 		}
             		}
         	}
+		stage ("Publish JFrog Artifactory") {
+			steps {
+				script {
+					echo "<=========JFrog Artifactory Started=============>"
+					def server = "Artifactory.newServer (url: "${registry}/artifactory", credentialId: "JFrog-Token")
+					def properties = "buildid=${env.BUILD_ID},commitid=${GIT_COMMIT}"
+					def uploadSpec """{
+						files: [
+							{
+								"pattern": "jarstaging/(*)",
+								"target": "vali-libs-release-local/{1}",
+								"flat": "false",
+								"props": "${properties}",
+								"exclusions": ["*.sha1", "*.md5"]
+							}
+						]
+					}"""
+					def buildInfo = server.upload(uploadSpec)
+					buildInfo.env.collect()
+					server.publishBuildInfo(buildInfo)
+					echo "<=========JFrog Artifactory Ended=============>"
+				}
+			}
+		}
     	}
 }
