@@ -1,5 +1,3 @@
-def registry = "https://trial2hancl.jfrog.io/"
-
 pipeline {
 	agent any
 
